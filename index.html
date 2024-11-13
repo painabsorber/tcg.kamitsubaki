@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>TCG Token Toggle</title>
   <style>
     /* 全体の背景とフォント */
@@ -17,7 +17,7 @@
       padding: 0;
       min-height: 100vh;
       box-sizing: border-box;
-      overflow-y: auto; /* 縦スクロールを許可 */
+      overflow-y: auto;
     }
 
     /* コンテナ全体のスタイル */
@@ -26,8 +26,9 @@
       flex-direction: column;
       align-items: center;
       position: relative;
+      padding: 60px 20px 20px;
+      gap: 30px;
       transform-origin: top center;
-      padding: 80px 20px 20px;
     }
 
     /* 画面幅に基づいた縮小 */
@@ -97,7 +98,7 @@
       height: auto;
       cursor: pointer;
       transition: opacity 0.3s ease, transform 0.2s ease;
-      opacity: 0.5;
+      opacity: 0.05; /* 初期の不透明度を0.05に設定 */
       border-radius: 5px;
       border: 2px solid #ddd;
       padding: 5px;
@@ -119,20 +120,51 @@
     }
 
     /* ダイスUIのスタイル */
+    .dice-section-container {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
     .dice-section {
-      margin-top: 40px;
-      padding: 20px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 20px; /* 上下の余白を減らす */
       background-color: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       text-align: center;
-      position: relative;
-      display: inline-block;
+      gap: 20px;
+    }
+
+    .dice-result {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #dice {
+      font-size: 8em; /* ダイスの絵文字サイズ */
+      color: #f0db4f;
+    }
+
+    .dice-result-label {
+      font-size: 2em; /* 結果ラベルのフォントサイズ */
+      color: #f0db4f;
+      margin-top: 10px;
+    }
+
+    .dice-button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px; /* ボタン間のスペースを増やす */
     }
 
     .dice-button {
-      padding: 10px 20px;
-      font-size: 1em;
+      padding: 15px 30px; /* ボタンサイズを2倍に */
+      font-size: 1.5em; /* ボタンテキストを大きく */
       color: #fff;
       background-color: #333;
       border: none;
@@ -145,28 +177,20 @@
       background-color: #555;
     }
 
-    /* リセットボタンのスタイルと位置調整 */
+    /* リセットボタンのスタイル */
     .reset-button {
-      padding: 10px 20px;
-      font-size: 1em;
+      padding: 15px 30px; /* リセットボタンサイズを2倍に */
+      font-size: 1.5em; /* リセットボタンのテキストを大きく */
       color: #fff;
       background-color: #333;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease;
-      margin-left: 20px;
-      display: inline-block;
     }
 
     .reset-button:hover {
       background-color: #555;
-    }
-
-    .dice-result {
-      font-size: 1.5em;
-      color: #f0db4f;
-      margin-top: 10px;
     }
 
     /* ダイス転がるアニメーション */
@@ -207,12 +231,15 @@
       </div>
     </div>
     <!-- Dice and Reset Section -->
-    <div style="display: flex; align-items: center; margin-top: 20px;">
+    <div class="dice-section-container">
       <div class="dice-section">
-        <h3>ダイスを振る</h3>
-        <button class="dice-button" id="dice-button">1d6を振る</button>
         <div class="dice-result" id="dice-result">
-          <div id="dice">⚀</div> 結果: -
+          <div id="dice">⚀</div>
+          <div class="dice-result-label" id="dice-label">結果: -</div>
+        </div>
+        <div class="dice-button-container">
+          <h3>ダイスを振る</h3>
+          <button class="dice-button" id="dice-button">1d6を振る</button>
         </div>
       </div>
       <button class="reset-button" onclick="resetState()">リセット</button>
@@ -249,7 +276,7 @@
             img.style.opacity = '1';
             img.dataset.active = 'true';
           } else {
-            img.style.opacity = '0.5';
+            img.style.opacity = '0.05'; // リセット時の不透明度も0.05に設定
             img.dataset.active = 'false';
           }
         });
@@ -261,27 +288,26 @@
     // ダイスを振る関数
     function rollDice() {
       const diceElement = document.getElementById('dice');
+      const diceLabel = document.getElementById('dice-label');
       diceElement.classList.add('rolling-dice');
       const result = Math.floor(Math.random() * 6) + 1;
 
       setTimeout(() => {
         diceElement.classList.remove('rolling-dice');
         diceElement.textContent = diceFaces[result];
-        document.getElementById('dice-result').innerHTML = 
-          `<div id="dice">${diceFaces[result]}</div> 結果: ${result}`;
+        diceLabel.textContent = `結果: ${result}`; // 結果ラベルに結果を表示
       }, 1000);
     }
 
     // 状態をリセットする関数
     function resetState() {
       document.querySelectorAll('.token-container img, .vol-container img').forEach(img => {
-        img.style.opacity = '0.5';
+        img.style.opacity = '0.05'; // リセット時の不透明度も0.05に設定
         img.dataset.active = 'false';
       });
 
       document.getElementById('dice').textContent = '⚀';
-      document.getElementById('dice-result').innerHTML = 
-        `<div id="dice">⚀</div> 結果: -`;
+      document.getElementById('dice-label').textContent = '結果: -'; // リセット時に結果ラベルをクリア
     }
 
     // ボタンにクリックとタッチイベントを追加
