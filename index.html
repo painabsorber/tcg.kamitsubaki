@@ -31,25 +31,6 @@
       transform-origin: top center;
     }
 
-    /* 画面幅に基づいた縮小 */
-    @media (max-width: 1024px) {
-      .container {
-        transform: scale(0.9);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        transform: scale(0.75);
-      }
-    }
-
-    @media (max-width: 425px) {
-      .container {
-        transform: scale(0.6);
-      }
-    }
-
     /* トークン全体を横並びに配置 */
     .tokens {
       display: flex;
@@ -98,7 +79,7 @@
       height: auto;
       cursor: pointer;
       transition: opacity 0.3s ease, transform 0.2s ease;
-      opacity: 0.05; /* 初期の不透明度を0.05に設定 */
+      opacity: 0.05;
       border-radius: 5px;
       border: 2px solid #ddd;
       padding: 5px;
@@ -130,7 +111,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      padding: 0px 30px; /* 上下の余白を減らす */
+      padding: 0px 30px;
       background-color: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -145,12 +126,12 @@
     }
 
     #dice {
-      font-size: 8em; /* ダイスの絵文字サイズ */
+      font-size: 8em;
       color: #f0db4f;
     }
 
     .dice-result-label {
-      font-size: 2em; /* 結果ラベルのフォントサイズ */
+      font-size: 2em;
       color: #f0db4f;
       margin-top: 10px;
     }
@@ -159,12 +140,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px; /* ボタン間のスペースを増やす */
+      gap: 20px;
     }
 
     .dice-button {
-      padding: 15px 30px; /* ボタンサイズを2倍に */
-      font-size: 1.5em; /* ボタンテキストを大きく */
+      padding: 15px 30px;
+      font-size: 1.5em;
       color: #fff;
       background-color: #333;
       border: none;
@@ -179,8 +160,8 @@
 
     /* リセットボタンのスタイル */
     .reset-button {
-      padding: 15px 30px; /* リセットボタンサイズを2倍に */
-      font-size: 1.5em; /* リセットボタンのテキストを大きく */
+      padding: 15px 30px;
+      font-size: 1.5em;
       color: #fff;
       background-color: #333;
       border: none;
@@ -247,6 +228,20 @@
   </div>
 
   <script>
+    // 端末の画面幅に基づいて全体の縮小を調整
+    function adjustScale() {
+      const screenWidth = window.innerWidth;
+      const baseWidth = 730; // 新しい基準幅を設定して縮小をさらに軽減
+      const scale = Math.min(screenWidth / baseWidth, 1);
+
+      // .container に縮小を適用
+      document.querySelector('.container').style.transform = `scale(${scale})`;
+    }
+
+    // ページが読み込まれた時とリサイズ時に調整
+    window.addEventListener('load', adjustScale);
+    window.addEventListener('resize', adjustScale);
+
     // ダイスの出目に対応する絵文字を定義
     const diceFaces = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 
@@ -276,7 +271,7 @@
             img.style.opacity = '1';
             img.dataset.active = 'true';
           } else {
-            img.style.opacity = '0.05'; // リセット時の不透明度も0.05に設定
+            img.style.opacity = '0.05';
             img.dataset.active = 'false';
           }
         });
@@ -295,19 +290,19 @@
       setTimeout(() => {
         diceElement.classList.remove('rolling-dice');
         diceElement.textContent = diceFaces[result];
-        diceLabel.textContent = `結果: ${result}`; // 結果ラベルに結果を表示
+        diceLabel.textContent = `結果: ${result}`;
       }, 1000);
     }
 
     // 状態をリセットする関数
     function resetState() {
       document.querySelectorAll('.token-container img, .vol-container img').forEach(img => {
-        img.style.opacity = '0.05'; // リセット時の不透明度も0.05に設定
+        img.style.opacity = '0.05';
         img.dataset.active = 'false';
       });
 
       document.getElementById('dice').textContent = '⚀';
-      document.getElementById('dice-label').textContent = '結果: -'; // リセット時に結果ラベルをクリア
+      document.getElementById('dice-label').textContent = '結果: -';
     }
 
     // ボタンにクリックとタッチイベントを追加
