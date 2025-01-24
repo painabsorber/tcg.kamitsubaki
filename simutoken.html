@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SimuToken Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #1a1a1d, #4e4e50);
+      color: #fff;
+      overflow: hidden; /* Prevent scrolling */
+      touch-action: manipulation; /* Prevent pinch-zoom and double-tap zoom */}
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      background: #2e2e2e;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+      margin-top: -70px;
+    }
+
+    .token-row {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .circle {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 30px;
+    }
+
+    .circle img {
+      width: 95px;
+      height: 95px;
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .arrow {
+      font-size: 4.5em; /* Increased size */
+      cursor: pointer;
+      user-select: none;
+      color: #f0db4f;
+      transition: color 0.3s;
+    }
+
+    .arrow:hover {
+      color: #fff;
+    }
+
+    .value {
+      font-size: 3em;
+      width: 70px;
+      text-align: center;
+      color: #f0db4f;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 2px solid #f0db4f;
+      border-radius: 8px;
+      padding: 5px;
+    }
+
+    .control-panel {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 8px;
+      background-color: #333;
+      color: #f0db4f;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    button:hover {
+      background-color: #555;
+      transform: scale(1.05);
+    }
+
+    .dice-section-container {
+      display: flex;
+      flex-direction: row; /* 横方向に配置 */
+      align-items: center;
+      justify-content: center;
+      margin-top: 0px;
+      gap: 20px; /* ボタンとダイスUIの間隔を調整 */
+    }
+
+    .dice-section {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0px 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      gap: 15px;
+      transform: scale(0.85); /* Reduce the overall size */
+      width: 250px;
+      height: 200px;
+    }
+
+    .dice-result {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #dice {
+      font-size: 8em;
+      color: #f0db4f;
+    }
+
+    .dice-result-label {
+      font-size: 2em;
+      color: #f0db4f;
+      margin-top: 10px;
+    }
+
+    .dice-button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .reset-button {
+      padding: 15px 30px;
+      width: 120px;
+      height: 50px;
+      font-size: 1.2em;
+      background-color: #333;
+      color: #f0db4f;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .reset-button:hover {
+      background-color: #555;
+      transform: scale(1.05);
+    }
+
+    .nav-button {
+      padding: 15px 30px;
+      width: 120px;
+      height: 50px;
+      font-size: 1.2em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .nav-button:hover {
+      background-color: #0056b3;
+    }
+
+    .rolling-dice {
+      animation: rollDice 1s ease;
+    }
+
+    @keyframes rollDice {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(90deg); }
+      50% { transform: rotate(180deg); }
+      75% { transform: rotate(270deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Token Rows -->
+    <div class="token-row" id="token1-row">
+      <div class="circle"><img src="tokenTex/alpha.png" alt="Alpha"></div>
+      <span class="arrow" onclick="updateToken('token1', -1)">&lt;</span>
+      <div class="value" id="token1-value">0</div>
+      <span class="arrow" onclick="updateToken('token1', 1)">&gt;</span>
+    </div>
+
+    <div class="token-row" id="token2-row">
+      <div class="circle"><img src="tokenTex/beta.png" alt="Beta"></div>
+      <span class="arrow" onclick="updateToken('token2', -1)">&lt;</span>
+      <div class="value" id="token2-value">0</div>
+      <span class="arrow" onclick="updateToken('token2', 1)">&gt;</span>
+    </div>
+
+    <div class="token-row" id="token3-row">
+      <div class="circle"><img src="tokenTex/omega.png" alt="Omega"></div>
+      <span class="arrow" onclick="updateToken('token3', -1)">&lt;</span>
+      <div class="value" id="token3-value">0</div>
+      <span class="arrow" onclick="updateToken('token3', 1)">&gt;</span>
+    </div>
+
+    <div class="token-row" id="token4-row">
+      <div class="circle"><img src="tokenTex/vol.png" alt="Vol"></div>
+      <span class="arrow" onclick="updateToken('token4', -1)">&lt;</span>
+      <div class="value" id="token4-value">0</div>
+      <span class="arrow" onclick="updateToken('token4', 1)">&gt;</span>
+    </div>
+
+    <!-- Dice Section -->
+    <div class="dice-section-container">
+      <div class="dice-section">
+        <div class="dice-result" id="dice-result">
+          <div id="dice">⚀</div>
+          <div class="dice-result-label" id="dice-label">結果: -</div>
+        </div>
+        <div class="dice-button-container">
+          <h3>ダイスを振る</h3>
+          <button class="dice-button" id="dice-button">振る</button>
+        </div>
+      </div>
+      <div class="button-group" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+        <button class="reset-button" onclick="resetState()">Clear</button>
+        <button class="nav-button" onclick="window.location.href='index.html'">TCGVer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function adjustScale() {
+      const screenWidth = window.innerWidth;
+      const baseWidth = 500;
+      const scale = Math.min(screenWidth / baseWidth, 1);
+      document.querySelector('.container').style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('load', adjustScale);
+    window.addEventListener('resize', adjustScale);
+
+    document.addEventListener('touchstart', function(event) {
+      if (event.touches.length > 1) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+      const now = new Date().getTime();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, { passive: false });
+    // Token values
+    const tokenValues = {
+      token1: 0,
+      token2: 0,
+      token3: 0,
+      token4: 0,
+    };
+
+    // Update token value
+    function updateToken(tokenId, delta) {
+      tokenValues[tokenId] += delta;
+      if (tokenValues[tokenId] < 0) tokenValues[tokenId] = 0; // Prevent negative values
+      document.getElementById(`${tokenId}-value`).textContent = tokenValues[tokenId];
+    }
+
+    // Reset all tokens
+    function resetTokens() {
+      for (const tokenId in tokenValues) {
+        tokenValues[tokenId] = 0;
+        document.getElementById(`${tokenId}-value`).textContent = 0;
+      }
+    }
+
+    // Dice functionality
+    const diceFaces = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+
+    function rollDice() {
+      const diceElement = document.getElementById('dice');
+      const diceLabel = document.getElementById('dice-label');
+      diceElement.classList.add('rolling-dice');
+      const result = Math.floor(Math.random() * 6) + 1;
+
+      setTimeout(() => {
+        diceElement.classList.remove('rolling-dice');
+        diceElement.textContent = diceFaces[result];
+        diceLabel.textContent = `結果: ${result}`;
+      }, 1000);
+    }
+
+    function resetState() {
+      resetTokens();
+      document.getElementById('dice').textContent = '⚀';
+      document.getElementById('dice-label').textContent = '結果: -';
+    }
+
+    const diceButton = document.getElementById('dice-button');
+    diceButton.addEventListener('click', rollDice);
+    diceButton.addEventListener('touchstart', rollDice);
+  </script>
+</body>
+</html>
