@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>TCG Token Toggle</title>
   <style>
-    /* 全体の背景とフォント */
     body {
       display: flex;
       justify-content: center;
@@ -20,7 +19,6 @@
       overflow-y: auto;
     }
 
-    /* コンテナ全体のスタイル */
     .container {
       display: flex;
       flex-direction: column;
@@ -31,13 +29,11 @@
       transform-origin: top center;
     }
 
-    /* トークン全体を横並びに配置 */
     .tokens {
       display: flex;
       gap: 20px;
     }
 
-    /* 各トークン列のスタイル */
     .token-section {
       display: flex;
       flex-direction: column;
@@ -53,12 +49,10 @@
       transform: scale(1.05);
     }
 
-    /* VOLと他のトークンセクションのスタイル統一 */
     .vol-container-section h3 {
       margin-bottom: 15px;
     }
 
-    /* 画像コンテナのスタイル */
     .token-container {
       display: flex;
       flex-direction: column;
@@ -72,7 +66,6 @@
       gap: 10px;
     }
 
-    /* 画像のスタイル */
     .token-container img,
     .vol-container img {
       width: 80px;
@@ -91,7 +84,6 @@
       transform: scale(1.1);
     }
 
-    /* 見出しのスタイル */
     h3 {
       margin: 0;
       font-size: 1.2em;
@@ -100,10 +92,9 @@
       text-align: center;
     }
 
-    /* ダイスUIのスタイル */
     .dice-section-container {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 20px;
     }
 
@@ -157,29 +148,56 @@
     .dice-button:hover {
       background-color: #555;
     }
+    
+    .button-group {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
 
-    /* リセットボタンのスタイル */
     .reset-button {
       padding: 15px 30px;
-      font-size: 1.5em;
-      color: #fff;
+      width: 130px;
+      height: 50px;
+      font-size: 1.2em;
       background-color: #333;
+      color: #f0db4f;
       border: none;
       border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
     .reset-button:hover {
       background-color: #555;
+      transform: scale(1.05);
     }
 
-    /* ダイス転がるアニメーション */
+    .nav-button {
+      padding: 15px 30px;
+      width: 130px;
+      height: 50px;
+      font-size: 1.2em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .nav-button:hover {
+      background-color: #0056b3;
+    }
+
     .rolling-dice {
       animation: rollDice 1s ease;
     }
 
-    /* アニメーション設定 */
     @keyframes rollDice {
       0% { transform: rotate(0deg); }
       25% { transform: rotate(90deg); }
@@ -190,9 +208,7 @@
   </style>
 </head>
 <body>
-  <!-- コンテナ全体 -->
   <div class="container">
-    <!-- トークンセクション -->
     <div class="tokens">
       <div class="token-section">
         <h3>魔力α</h3>
@@ -211,7 +227,6 @@
         <div class="vol-container" id="token4-container"></div>
       </div>
     </div>
-    <!-- Dice and Reset Section -->
     <div class="dice-section-container">
       <div class="dice-section">
         <div class="dice-result" id="dice-result">
@@ -223,49 +238,40 @@
           <button class="dice-button" id="dice-button">1d6を振る</button>
         </div>
       </div>
-      <button class="reset-button" onclick="resetState()">リセット</button>
+      <div class="button-group" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+        <button class="reset-button" onclick="resetState()">Clear</button>
+        <button class="nav-button" onclick="window.location.href='simutoken.html'">SimuVer</button>
+      </div>
     </div>
   </div>
 
   <script>
-    // 端末の画面幅に基づいて全体の縮小を調整
     function adjustScale() {
       const screenWidth = window.innerWidth;
-      const baseWidth = 730; // 新しい基準幅を設定して縮小をさらに軽減
+      const baseWidth = 730;
       const scale = Math.min(screenWidth / baseWidth, 1);
-
-      // .container に縮小を適用
       document.querySelector('.container').style.transform = `scale(${scale})`;
     }
 
-    // ページが読み込まれた時とリサイズ時に調整
     window.addEventListener('load', adjustScale);
     window.addEventListener('resize', adjustScale);
 
-    // ダイスの出目に対応する絵文字を定義
     const diceFaces = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 
-    // トークンの数と画像ファイル名
     const tokens = [
-      { id: 'token1', name: '魔力α', count: 5, fileName: 'alpha.png' },
-      { id: 'token2', name: '魔力β', count: 5, fileName: 'beta.png' },
-      { id: 'token3', name: '魔力Ω', count: 5, fileName: 'omega.png' },
-      { id: 'token4', name: 'VOL', count: 10, fileName: 'vol.png' }
+      { id: 'token1', name: '魔力α', count: 5, fileName: 'tokenTex/alpha.png' },
+      { id: 'token2', name: '魔力β', count: 5, fileName: 'tokenTex/beta.png' },
+      { id: 'token3', name: '魔力Ω', count: 5, fileName: 'tokenTex/omega.png' },
+      { id: 'token4', name: 'VOL', count: 10, fileName: 'tokenTex/vol.png' }
     ];
 
-    // 各トークンを生成し、クリックで不透明度を変更するイベントを設定
     tokens.forEach(token => {
       const container = document.getElementById(`${token.id}-container`);
-      
       for (let i = 0; i < token.count; i++) {
         const img = document.createElement('img');
         img.src = token.fileName;
         img.alt = token.name;
-
-        // 初期状態を設定
         img.dataset.active = 'false';
-
-        // クリックで不透明度を切り替え
         img.addEventListener('click', () => {
           if (img.dataset.active === 'false') {
             img.style.opacity = '1';
@@ -275,12 +281,10 @@
             img.dataset.active = 'false';
           }
         });
-
         container.appendChild(img);
       }
     });
 
-    // ダイスを振る関数
     function rollDice() {
       const diceElement = document.getElementById('dice');
       const diceLabel = document.getElementById('dice-label');
@@ -294,18 +298,15 @@
       }, 1000);
     }
 
-    // 状態をリセットする関数
     function resetState() {
       document.querySelectorAll('.token-container img, .vol-container img').forEach(img => {
         img.style.opacity = '0.05';
         img.dataset.active = 'false';
       });
-
       document.getElementById('dice').textContent = '⚀';
       document.getElementById('dice-label').textContent = '結果: -';
     }
 
-    // ボタンにクリックとタッチイベントを追加
     const diceButton = document.getElementById('dice-button');
     diceButton.addEventListener('click', rollDice);
     diceButton.addEventListener('touchstart', rollDice);
