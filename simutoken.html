@@ -195,6 +195,55 @@
       75% { transform: rotate(270deg); }
       100% { transform: rotate(360deg); }
     }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.7);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 3% auto;
+      padding: 0;
+      border: 1px solid #888;
+      width: 95%;
+      height: 90%;
+      max-width: 1200px;
+      border-radius: 10px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-content iframe {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .close {
+      color: #aaa;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
   </style>
 </head>
 <body>
@@ -233,17 +282,25 @@
       <div class="dice-section">
         <div class="dice-result" id="dice-result">
           <div id="dice">⚀</div>
-          <div class="dice-result-label" id="dice-label">結果: -</div>
+          <!-- <div class="dice-result-label" id="dice-label">結果: -</div> -->
         </div>
         <div class="dice-button-container">
           <h3>ダイスを振る</h3>
-          <button class="dice-button" id="dice-button">振る</button>
+          <!-- <button class="dice-button" id="dice-button">振る</button> -->
+          <button class="reset-button" onclick="openDiceModal()">ダイス</button>
         </div>
       </div>
       <div class="button-group" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
         <button class="reset-button" onclick="resetState()">Clear</button>
         <button class="nav-button" onclick="window.location.href='index.html'">TCGVer</button>
       </div>
+    </div>
+  </div>
+
+  <div id="diceModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeDiceModal()">&times;</span>
+      <iframe src="dice.html"></iframe>
     </div>
   </div>
 
@@ -320,6 +377,14 @@
     const diceButton = document.getElementById('dice-button');
     diceButton.addEventListener('click', rollDice);
     diceButton.addEventListener('touchstart', rollDice);
+    
+    function openDiceModal() {
+      document.getElementById('diceModal').style.display = 'block';
+    }
+
+    function closeDiceModal() {
+      document.getElementById('diceModal').style.display = 'none';
+    }
   </script>
 </body>
 </html>
