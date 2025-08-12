@@ -14,6 +14,22 @@
   <title>サイコロを振る</title>
   <link rel="stylesheet" href="diceContents/style.css">
 </head>
+<script>
+  // ダブルタップズーム無効化
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function (event) {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+
+  // スクロール無効化
+  document.addEventListener('touchmove', function (e) {
+    e.preventDefault();
+  }, { passive: false });
+</script>
 <body>
   <div class="container">
     <div class="area">
